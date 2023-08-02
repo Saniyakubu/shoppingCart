@@ -130,7 +130,7 @@ const Cart = () => {
           </div>
           <div style={{ margin: '30px' }}>
             <Button variant="contained" onClick={checkout}>
-              Check out
+              Checkout
             </Button>
           </div>
         </div>
