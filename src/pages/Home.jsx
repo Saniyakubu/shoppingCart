@@ -11,14 +11,13 @@ const Home = () => {
     btn,
     filteredItem,
   } = useContext(StoreContext);
-  console.log(btn);
-  console.log(filtered);
   return (
     <main>
       <div className="btnGroup">
         {btn.map((button) => {
           return (
             <Button
+              key={button}
               variant="contained"
               onClick={() => filteredItem(button)}
               className="btns"

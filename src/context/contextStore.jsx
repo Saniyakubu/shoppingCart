@@ -1,13 +1,11 @@
 import { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
-
+import toast, { Toaster } from 'react-hot-toast';
 export const StoreContext = createContext([]);
 
 const ContextStore = ({ children }) => {
   const [storeProducts, setStoreProducts] = useState([]);
-
   const [btn, setBtn] = useState([]);
-
   const [cartProducts, setCartProducts] = useState([]);
 
   const hasNumberBiggerThanZero = Object.values(cartProducts).some(
@@ -17,7 +15,6 @@ const ContextStore = ({ children }) => {
   async function getItems() {
     try {
       const res = await axios.get('https://fakestoreapi.com/products/');
-      console.log(res);
       const data = await res.data;
       if (data) {
         setStoreProducts(data);
@@ -35,21 +32,18 @@ const ContextStore = ({ children }) => {
         let cart = {};
         for (let i = 1; i < data.length + 1; i++) {
           cart[i] = 0;
-          /* const local = localStorage.setItem('cartItems', JSON.stringify(cart));
-          setCartProducts(local); */
           setCartProducts(cart);
         }
       }
       CartItems();
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   }
 
   async function filteredItem(category) {
     if (category === 'all') {
       const res = await axios.get('https://fakestoreapi.com/products/');
-      console.log(res);
       const data = await res.data;
       const filteredAll = data.filter((item) => item);
       setStoreProducts(filteredAll);
@@ -78,7 +72,6 @@ const ContextStore = ({ children }) => {
     let totalAmount = 0;
     let formattedNumber;
     let local;
-    /*      const userJSON.parse(localStorage.getItem('cartItems')) || */
     for (const item in cartProducts) {
       if (cartProducts[item] > 0) {
         let itemInfo = storeProducts.find(
@@ -95,14 +88,6 @@ const ContextStore = ({ children }) => {
   useEffect(() => {
     getItems();
   }, []);
-  /* 
-  useEffect(() => {
-    const local = localStorage.setItem(
-      'cartItems',
-      JSON.stringify(cartProducts)
-    );
-    setCartProducts(local);
-  }, [cartProducts]); */
 
   const store = {
     cartProducts,
@@ -117,7 +102,10 @@ const ContextStore = ({ children }) => {
   };
 
   return (
-    <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
+    <StoreContext.Provider value={store}>
+      <Toaster position="top-center" reverseOrder={false} />
+      {children}
+    </StoreContext.Provider>
   );
 };
 

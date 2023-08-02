@@ -1,9 +1,36 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { StoreContext } from '../context/contextStore';
 import { TbPlus, TbMinus } from 'react-icons/tb';
-import { Button } from '@mui/material';
+import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+// material Ui
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import Button from '@mui/material/Button';
+
+// style
 import '../scss/Cart.scss';
+
 const Cart = () => {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+  function checkout() {
+    setOpen(true);
+    setTimeout(() => {
+      setOpen(false);
+    }, 4000);
+    console.log('object');
+    setTimeout(() => {
+      toast.success(
+        'Thank you for your purchase! Your order has been confirmed.'
+      );
+    }, 5000);
+    setTimeout(() => {
+      navigate('/');
+    }, 6000);
+  }
+  /* Thank you for your purchase! Your order has been confirmed. */
   const {
     storeProducts,
     cartProducts,
@@ -13,11 +40,17 @@ const Cart = () => {
     getTotalAmount,
     hasNumberBiggerThanZero,
   } = useContext(StoreContext);
-  console.log(cartProducts);
   const totalPrice = getTotalAmount();
 
   return (
     <>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={open}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Toaster position="top-center" reverseOrder={false} />
       {hasNumberBiggerThanZero ? (
         <div className="box">
           <h1>Shopping Cart</h1>
@@ -34,7 +67,6 @@ const Cart = () => {
             {storeProducts &&
               storeProducts.map((items) => {
                 const { id, title, image, price } = items;
-
                 if (cartProducts[id] > 0) {
                   return (
                     <div key={id} className="productsBox">
@@ -95,6 +127,11 @@ const Cart = () => {
                 <h1>${totalPrice}</h1>
               </div>
             </div>
+          </div>
+          <div style={{ margin: '30px' }}>
+            <Button variant="contained" onClick={checkout}>
+              Check out
+            </Button>
           </div>
         </div>
       ) : (
