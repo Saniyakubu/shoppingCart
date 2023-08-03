@@ -11,6 +11,7 @@ const Home = () => {
     btn,
     filteredItem,
   } = useContext(StoreContext);
+
   return (
     <main>
       <div className="btnGroup">

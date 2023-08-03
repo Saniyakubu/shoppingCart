@@ -5,6 +5,7 @@ export const StoreContext = createContext([]);
 
 const ContextStore = ({ children }) => {
   const [storeProducts, setStoreProducts] = useState([]);
+  const [selectedProducts, setSelectedProducts] = useState([]);
   const [btn, setBtn] = useState([]);
   const [cartProducts, setCartProducts] = useState([]);
 
@@ -18,6 +19,7 @@ const ContextStore = ({ children }) => {
       const data = await res.data;
       if (data) {
         setStoreProducts(data);
+        setSelectedProducts(data);
         const addNewBtn = [
           'all',
           ...new Set(
@@ -53,7 +55,6 @@ const ContextStore = ({ children }) => {
       const filtered = data.filter((item) => item.category === category);
       setStoreProducts(filtered);
     }
-    return filtered;
   }
 
   function addToCart(itemId) {
@@ -72,12 +73,12 @@ const ContextStore = ({ children }) => {
     let totalAmount = 0;
     let formattedNumber;
     let local;
-    for (const item in cartProducts) {
-      if (cartProducts[item] > 0) {
+    for (const item in selectedProducts) {
+      if (selectedProducts[item] > 0) {
         let itemInfo = storeProducts.find(
           (product) => product.id === Number(item)
         );
-        totalAmount += cartProducts[item] * itemInfo.price;
+        totalAmount += selectedProducts[item] * itemInfo.price;
         formattedNumber = parseFloat(totalAmount.toFixed(10).toString());
         local = formattedNumber.toLocaleString();
       }
@@ -92,11 +93,13 @@ const ContextStore = ({ children }) => {
   const store = {
     cartProducts,
     storeProducts,
+    selectedProducts,
     addToCart,
     removeFromCart,
     updateAmount,
     getTotalAmount,
     filteredItem,
+    setSelectedProducts,
     btn,
     hasNumberBiggerThanZero,
   };

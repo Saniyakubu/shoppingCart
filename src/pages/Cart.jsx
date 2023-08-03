@@ -32,8 +32,8 @@ const Cart = () => {
   }
   /* Thank you for your purchase! Your order has been confirmed. */
   const {
-    storeProducts,
     cartProducts,
+    selectedProducts,
     addToCart,
     removeFromCart,
     updateAmount,
@@ -64,8 +64,8 @@ const Cart = () => {
               </div>
               <p className="mycart">My Cart</p>
             </header>
-            {storeProducts &&
-              storeProducts.map((items) => {
+            {selectedProducts &&
+              selectedProducts.map((items) => {
                 const { id, title, image, price } = items;
                 if (cartProducts[id] > 0) {
                   return (
